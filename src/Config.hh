@@ -1,3 +1,6 @@
+// Copyright (c) 2010
+// All rights reserved.
+
 #ifndef STAB_CONFIG_HH
 #define STAB_CONFIG_HH
 
@@ -5,18 +8,15 @@
 #include <memory>
 #include "soil/Config.hh"
 
-namespace stab
-{
+namespace stab {
 
 namespace po = boost::program_options;
 
-class StabOptions : public soil::Options
-{
+class Options : public soil::Options {
  public:
+  Options();
 
-  StabOptions();
-  
-  virtual ~StabOptions();
+  virtual ~Options();
 
   virtual po::options_description* configOptions();
 
@@ -36,31 +36,24 @@ class StabOptions : public soil::Options
   boost::program_options::options_description config_options_;
 };
 
-class StabConfig
-{
+class Config {
  public:
-  
-  StabConfig(int argc=0, char* argv[]=NULL);
-  ~StabConfig();
+  explicit Config(int argc = 0, char* argv[] = nullptr);
+  ~Config();
 
-  StabOptions* stabOptions()
-  {
+  Options* stabOptions() {
     return stab_options_.get();
   }
 
-  soil::Options* seaTraderOptions()
-  {
+  soil::Options* seaTraderOptions() {
     return sea_trader_options_.get();
   }
 
  private:
-  std::unique_ptr<StabOptions> stab_options_;
-  
+  std::unique_ptr<Options> stab_options_;
   std::unique_ptr<soil::Options> sea_trader_options_;
-
 };
 
-}  
+}  // namespace stab
 
-
-#endif 
+#endif

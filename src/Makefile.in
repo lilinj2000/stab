@@ -96,8 +96,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(stabdir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_stab_OBJECTS = stab-StabConfig.$(OBJEXT) \
-	stab-TraderServer.$(OBJEXT) stab-Main.$(OBJEXT)
+am_stab_OBJECTS = stab-Config.$(OBJEXT) stab-Server.$(OBJEXT) \
+	stab-Main.$(OBJEXT)
 stab_OBJECTS = $(am_stab_OBJECTS)
 am__DEPENDENCIES_1 =
 stab_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
@@ -380,8 +380,8 @@ top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
 SUBDIRS = 
 stab_SOURCES = \
-	StabConfig.cc \
-	TraderServer.cc \
+	Config.cc \
+	Server.cc \
 	Main.cc 
 
 stab_CPPFLAGS = -I$(top_srcdir) \
@@ -399,9 +399,9 @@ stab_LDADD = \
 stab_LDFLAGS = $(LIBADD_DL) -Wl,--no-as-needed -pthread
 
 # header files
-noinst_HEADERS = StabConfig.hh \
-		StabLog.hh \
-		TraderServer.hh
+noinst_HEADERS = Config.hh \
+		 Log.hh \
+		 Server.hh
 
 EXTRA_DIST = env.sh stab.cfg log.cfg
 stabdir = $(bindir)
@@ -500,9 +500,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stab-Config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stab-Main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stab-StabConfig.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stab-TraderServer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stab-Server.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -525,33 +525,33 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
 
-stab-StabConfig.o: StabConfig.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stab-StabConfig.o -MD -MP -MF $(DEPDIR)/stab-StabConfig.Tpo -c -o stab-StabConfig.o `test -f 'StabConfig.cc' || echo '$(srcdir)/'`StabConfig.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stab-StabConfig.Tpo $(DEPDIR)/stab-StabConfig.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='StabConfig.cc' object='stab-StabConfig.o' libtool=no @AMDEPBACKSLASH@
+stab-Config.o: Config.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stab-Config.o -MD -MP -MF $(DEPDIR)/stab-Config.Tpo -c -o stab-Config.o `test -f 'Config.cc' || echo '$(srcdir)/'`Config.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stab-Config.Tpo $(DEPDIR)/stab-Config.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Config.cc' object='stab-Config.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o stab-StabConfig.o `test -f 'StabConfig.cc' || echo '$(srcdir)/'`StabConfig.cc
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o stab-Config.o `test -f 'Config.cc' || echo '$(srcdir)/'`Config.cc
 
-stab-StabConfig.obj: StabConfig.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stab-StabConfig.obj -MD -MP -MF $(DEPDIR)/stab-StabConfig.Tpo -c -o stab-StabConfig.obj `if test -f 'StabConfig.cc'; then $(CYGPATH_W) 'StabConfig.cc'; else $(CYGPATH_W) '$(srcdir)/StabConfig.cc'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stab-StabConfig.Tpo $(DEPDIR)/stab-StabConfig.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='StabConfig.cc' object='stab-StabConfig.obj' libtool=no @AMDEPBACKSLASH@
+stab-Config.obj: Config.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stab-Config.obj -MD -MP -MF $(DEPDIR)/stab-Config.Tpo -c -o stab-Config.obj `if test -f 'Config.cc'; then $(CYGPATH_W) 'Config.cc'; else $(CYGPATH_W) '$(srcdir)/Config.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stab-Config.Tpo $(DEPDIR)/stab-Config.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Config.cc' object='stab-Config.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o stab-StabConfig.obj `if test -f 'StabConfig.cc'; then $(CYGPATH_W) 'StabConfig.cc'; else $(CYGPATH_W) '$(srcdir)/StabConfig.cc'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o stab-Config.obj `if test -f 'Config.cc'; then $(CYGPATH_W) 'Config.cc'; else $(CYGPATH_W) '$(srcdir)/Config.cc'; fi`
 
-stab-TraderServer.o: TraderServer.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stab-TraderServer.o -MD -MP -MF $(DEPDIR)/stab-TraderServer.Tpo -c -o stab-TraderServer.o `test -f 'TraderServer.cc' || echo '$(srcdir)/'`TraderServer.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stab-TraderServer.Tpo $(DEPDIR)/stab-TraderServer.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='TraderServer.cc' object='stab-TraderServer.o' libtool=no @AMDEPBACKSLASH@
+stab-Server.o: Server.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stab-Server.o -MD -MP -MF $(DEPDIR)/stab-Server.Tpo -c -o stab-Server.o `test -f 'Server.cc' || echo '$(srcdir)/'`Server.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stab-Server.Tpo $(DEPDIR)/stab-Server.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Server.cc' object='stab-Server.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o stab-TraderServer.o `test -f 'TraderServer.cc' || echo '$(srcdir)/'`TraderServer.cc
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o stab-Server.o `test -f 'Server.cc' || echo '$(srcdir)/'`Server.cc
 
-stab-TraderServer.obj: TraderServer.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stab-TraderServer.obj -MD -MP -MF $(DEPDIR)/stab-TraderServer.Tpo -c -o stab-TraderServer.obj `if test -f 'TraderServer.cc'; then $(CYGPATH_W) 'TraderServer.cc'; else $(CYGPATH_W) '$(srcdir)/TraderServer.cc'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stab-TraderServer.Tpo $(DEPDIR)/stab-TraderServer.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='TraderServer.cc' object='stab-TraderServer.obj' libtool=no @AMDEPBACKSLASH@
+stab-Server.obj: Server.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stab-Server.obj -MD -MP -MF $(DEPDIR)/stab-Server.Tpo -c -o stab-Server.obj `if test -f 'Server.cc'; then $(CYGPATH_W) 'Server.cc'; else $(CYGPATH_W) '$(srcdir)/Server.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stab-Server.Tpo $(DEPDIR)/stab-Server.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Server.cc' object='stab-Server.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o stab-TraderServer.obj `if test -f 'TraderServer.cc'; then $(CYGPATH_W) 'TraderServer.cc'; else $(CYGPATH_W) '$(srcdir)/TraderServer.cc'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o stab-Server.obj `if test -f 'Server.cc'; then $(CYGPATH_W) 'Server.cc'; else $(CYGPATH_W) '$(srcdir)/Server.cc'; fi`
 
 stab-Main.o: Main.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stab_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stab-Main.o -MD -MP -MF $(DEPDIR)/stab-Main.Tpo -c -o stab-Main.o `test -f 'Main.cc' || echo '$(srcdir)/'`Main.cc

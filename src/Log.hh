@@ -1,3 +1,6 @@
+// Copyright (c) 2010
+// All rights reserved.
+
 #ifndef STAB_LOG_HH
 #define STAB_LOG_HH
 

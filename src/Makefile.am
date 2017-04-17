@@ -4,8 +4,8 @@ SUBDIRS =
 
 bin_PROGRAMS = stab
 stab_SOURCES = \
-	StabConfig.cc \
-	TraderServer.cc \
+	Config.cc \
+	Server.cc \
 	Main.cc 
 
 
@@ -26,9 +26,9 @@ stab_LDADD = \
 stab_LDFLAGS = $(LIBADD_DL) -Wl,--no-as-needed -pthread
 
 # header files
-noinst_HEADERS = StabConfig.hh \
-		StabLog.hh \
-		TraderServer.hh
+noinst_HEADERS = Config.hh \
+		 Log.hh \
+		 Server.hh
 
 
 EXTRA_DIST = env.sh stab.cfg log.cfg
