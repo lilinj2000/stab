@@ -2,10 +2,6 @@
 
 home_app=~/app
 
-if test -d /llj/app ; then
-   home_app=/llj/app
-fi
-
 home_stab=${home_app}/stab
 
 ./configure --prefix=${home_stab}
