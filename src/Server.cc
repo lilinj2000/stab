@@ -2,90 +2,79 @@
 // All rights reserved.
 
 #include "Server.hh"
-#include "Log.hh"
+#include "soil/Log.hh"
 #include "soil/STimer.hh"
 
 namespace stab {
 
-Server::Server(Options* stab_options, soil::Options* trader_options):
-    stab_options_(stab_options) {
-  STAB_TRACE <<"Server::Server()";
+Server::Server(
+    const rapidjson::Document& doc) {
+  SOIL_FUNC_TRACE;
+
+  options_.reset(new Options(doc));
 
   trader_service_.reset(
-      sea::TraderService::createService(trader_options, this));
+      sea::TraderService::create(doc, this));
 
-  if (!stab_options->timestamp_file.empty()) {
+  if (!options_->timestamp_file.empty()) {
     timestamp_file_.reset(
-        new air::TimeStampDataFile(stab_options->timestamp_file));
+        new air::TimeStampDataFile(options_->timestamp_file));
   }
 }
 
 Server::~Server() {
-  STAB_TRACE <<"Server::~Server()";
+  SOIL_FUNC_TRACE;
 }
 
-void Server::onOrderAccept(int client_order_token, int market_order_token) {
-  STAB_TRACE <<"Server::onOrderAccept()";
+void Server::onOrderAccept(
+    const std::string& theAccept) {
+  SOIL_FUNC_TRACE;
 
-  STAB_INFO <<"client_order_token: " <<client_order_token
-             <<"market_order_token: " <<market_order_token;
+  // STAB_INFO <<"client_order_token: " <<client_order_token
+  //            <<"market_order_token: " <<market_order_token;
 
-  updateT1(client_order_token, market_order_token);
+  // updateT1(client_order_token, market_order_token);
 }
 
-void Server::onOrderMarketAccept(int market_order_token) {
-  STAB_TRACE <<"Server::onOrderMarketAccept()";
+void Server::onOrderMarketAccept(
+    const std::string& theAccept) {
+  SOIL_FUNC_TRACE;
 
-  STAB_INFO <<"market_order_token: " <<market_order_token;
+  // STAB_INFO <<"market_order_token: " <<market_order_token;
 
-  updateT2(market_order_token);
+  // updateT2(market_order_token);
 }
 
+void Server::onOrderReject(
+    const std::string& theReject) {
+  SOIL_FUNC_TRACE;
 
-void Server::onOrderReject(int client_order_token) {
-  STAB_TRACE <<"Server::onOrderReject()";
+  rapidjson::Document doc;
+  if (doc.Parse(theReject).HasParseError()) {
+    throw std::runtime_error(
+        soil::json::get_parse_error(doc, theReject));
+  }
 
-  STAB_INFO <<"client_order_token: " <<client_order_token;
+  int clientOrderToken = -1;
+  soil::json::get_item_value(
+      &clientOrderToken,
+      doc,
+      "/EES_OrderRejectField/m_ClientOrderToken");
+
+  updateT1(clientOrderToken);
 }
 
-void Server::onOrderMarketReject(int market_order_token) {
-  STAB_TRACE <<"Server::onOrderMarketReject()";
+void Server::onOrderMarketReject(
+    const std::string& theReject) {
+  SOIL_FUNC_TRACE;
 
-  STAB_INFO <<"market_order_token: " <<market_order_token;
+  // STAB_INFO <<"market_order_token: " <<market_order_token;
 
-  updateT2(market_order_token);
-}
-
-void Server::onOrderExecution(int client_order_token,
-                              int market_order_token,
-                              unsigned int quntity,
-                              double price) {
-  STAB_TRACE <<"Server::onOrderExecution()";
-
-  STAB_INFO <<"client_order_token: " <<client_order_token
-            <<" market_order_token: " <<market_order_token
-            <<" quntity: " <<quntity
-            <<" price: " <<price;
-}
-
-void Server::onOrderCxled(int client_order_token,
-                          int market_order_token,
-                          unsigned int quntity) {
-  STAB_TRACE <<"Server::onOrderCxled()";
-
-  STAB_INFO <<"client_order_token: " <<client_order_token
-            <<" market_order_token: " <<market_order_token
-            <<" quntity: " <<quntity;
-}
-
-void Server::onCxlOrderReject(int market_order_token) {
-  STAB_TRACE <<"Server::onCxlOrderReject()";
-
-  STAB_INFO <<"market_order_token: " <<market_order_token;
+  // updateT2(market_order_token);
 }
 
 void Server::run() {
-  STAB_TRACE <<"Server::run()";
+  SOIL_FUNC_TRACE;
 
   int counter = 0;
 
@@ -93,47 +82,48 @@ void Server::run() {
   cond.reset(soil::STimer::create());
 
   do {
-    int order_ref = -1;
+    int clientOrderToken = -1;
 
-    if (stab_options_->is_buy) {
-      order_ref = trader_service_->orderOpenBuyFOK(
-          stab_options_->instrument_id,
-          stab_options_->price,
-          stab_options_->volume);
-    } else {
-      order_ref = trader_service_->orderOpenSellFOK(
-          stab_options_->instrument_id,
-          stab_options_->price,
-          stab_options_->volume);
-    }
+    clientOrderToken = trader_service_->openBuyOrderFOK(
+        options_->instru,
+        options_->price,
+        options_->volume);
 
-    records_[order_ref] = new air::TimeStampData(order_ref);
+    std::shared_ptr<air::TimeStampData>
+        ts(new air::TimeStampData(clientOrderToken));
+    records_[clientOrderToken] = ts;
 
     ++counter;
 
-    if (stab_options_->order_counter > 0
-        && counter >= stab_options_->order_counter)
+    if (options_->order_counter > 0
+        && counter >= options_->order_counter)
       break;
 
-    cond->wait(stab_options_->order_interval);
+    cond->wait(options_->order_interval);
   }while(true);
 
   cond->wait(1000);
 }
 
-void Server::updateT1(int client_order_token, int market_order_token) {
-  STAB_TRACE <<"Server::updateT1()";
+void Server::updateT1(
+    int client_order_token,
+    int market_order_token) {
+  SOIL_FUNC_TRACE;
 
   auto it = records_.find(client_order_token);
 
-  if (it != records_.end())
+  if (it != records_.end()) {
     it->second->updateT1();
+    timestamp_file_->putData(it->second);
 
-  tokens_[market_order_token] = client_order_token;
+    records_.erase(it);
+  }
+
+  // tokens_[market_order_token] = client_order_token;
 }
 
 void Server::updateT2(int market_order_token) {
-  STAB_TRACE <<"Server::updateT2()";
+  SOIL_FUNC_TRACE;
 
   auto it_token = tokens_.find(market_order_token);
 
@@ -151,7 +141,7 @@ void Server::updateT2(int market_order_token) {
 
   if (it != records_.end()) {
     it->second->updateT2();
-    timestamp_file_->putData(it->second);
+    // timestamp_file_->putData(it->second);
 
     records_.erase(it);
   }

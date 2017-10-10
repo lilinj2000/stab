@@ -2,19 +2,23 @@
 // All rights reserved.
 
 #include <memory>
-#include "Config.hh"
 #include "Server.hh"
+#include "soil/Log.hh"
 
 int main(int argc, char* argv[]) {
-  std::unique_ptr<stab::Config> config;
-  config.reset(new stab::Config(argc, argv));
+  std::string config_file = "stab.json";
+  rapidjson::Document doc;
+  soil::json::load_from_file(&doc, config_file);
+  soil::log::init(doc);
 
-  stab::Options* stab_options = config->stabOptions();
+  try {
+    std::unique_ptr<stab::Server> server;
+    server.reset(new stab::Server(doc));
 
-  std::unique_ptr<stab::Server> server;
-  server.reset(new stab::Server(stab_options, config->seaTraderOptions()));
-
-  server->run();
+    server->run();
+  } catch (std::exception& e) {
+    SOIL_ERROR("Error: {}", e.what());
+  }
 
   return 0;
 }

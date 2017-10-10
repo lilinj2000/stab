@@ -5,50 +5,50 @@
 #define STAB_SERVER_HH
 
 #include <map>
+#include <string>
 #include "sea/TraderService.hh"
-#include "Config.hh"
+#include "Options.hh"
 #include "air/TimeStampDataFile.hh"
+#include "soil/json.hh"
 
 namespace stab {
 
-typedef std::map<int, air::TimeStampData*> TimeStampRecords;
+typedef std::map<int,
+                 std::shared_ptr<air::TimeStampData> > TimeStampRecords;
 
 typedef std::map<int, int> TokenRecords;
 
-class Server : public sea::TraderServiceCallback {
+class Server :
+      public sea::TraderCallback {
  public:
-  Server(Options* stab_options, soil::Options* trader_options);
+  explicit Server(
+      const rapidjson::Document& doc);
 
   virtual ~Server();
 
-  virtual void onOrderAccept(int client_order_token, int market_order_token);
+  virtual void onOrderAccept(
+      const std::string& theAccept);
 
-  virtual void onOrderMarketAccept(int market_order_token);
+  virtual void onOrderMarketAccept(
+      const std::string& theAccept);
 
-  virtual void onOrderReject(int client_order_token);
+  virtual void onOrderReject(
+      const std::string& theReject);
 
-  virtual void onOrderMarketReject(int market_order_token);
-
-  virtual void onOrderExecution(int client_order_token,
-                                int market_order_token,
-                                unsigned int quntity,
-                                double price);
-
-  virtual void onOrderCxled(int client_order_token,
-                            int market_order_token,
-                            unsigned int quntity);
-
-  virtual void onCxlOrderReject(int market_order_token);
+  virtual void onOrderMarketReject(
+      const std::string& theReject);
 
   void run();
 
  protected:
-  void updateT1(int client_order_token, int market_order_token);
+  void updateT1(
+      int client_order_token,
+      int market_order_token = -1);
 
   void updateT2(int market_order_token);
 
  private:
-  Options* stab_options_;
+  std::unique_ptr<Options> options_;
 
   std::unique_ptr<sea::TraderService> trader_service_;
 
